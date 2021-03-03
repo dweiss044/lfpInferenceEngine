@@ -1,6 +1,8 @@
 #ifndef LFPRATIOMETER_H
 #define LFPRATIOMETER_H
 
+#include <default_gui_model.h>
+
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
@@ -11,7 +13,10 @@
 
 #include <fftw3.h>
 
-class lfpRatiometer {
+class lfpRatiometer : public DefaultGUIModel {
+
+    Q_OBJECT
+
     public:
         // constructor
         lfpRatiometer(int N_input, double sampling_input);
@@ -21,8 +26,15 @@ class lfpRatiometer {
 
         // execute
         void execute();
+
+        // functions to make GUI
+        void createGUI(DefaultGUIModel::variable_t*, int);
+        void customizeGUI(void);
         
     protected:
+
+        // update function
+        virtual void update(DefaultGUIModel::update_flags_t)
 
     private:
     
@@ -69,8 +81,13 @@ class lfpRatiometer {
             }
         }
 
+        void initParameters();
         void makePSD();
         void getRatio();
+    
+    private slots:
+        void aBttn_event(void);
+        void bBttn_event(void);
 
 
 };
