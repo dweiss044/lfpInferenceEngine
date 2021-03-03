@@ -70,18 +70,6 @@ lfpRatiometer::lfpRatiometer(int N_input, double sampling_input)
     // FFTW_MEASURE makes initialization long for faster...
     // calculations
     p = fftw_plan_dft_r2c_1d(N,in,out,FFTW_MEASURE);
-
-    // tmp
-    for (int j=0; j<N; j++){
-        in_raw.push_back(1);
-    }
-    in_raw.at(1) = 2;
-    in_raw.at(8) = 2;
-
-    // fill_n(in, N, 1); // making input a constant vector for now
-    // in[1] = 2;
-    // in[8] = 2;
-    cout << "constructed\n";
 }
 
 // defining what's in the object's destructor
@@ -93,27 +81,29 @@ lfpRatiometer::~lfpRatiometer(void) {
     // free input array
     fftw_free(in);
 
-    cout << "destroyed\n";
     return;
 }
 
-// function that operates on the input vector
+// real-time RTXI function
 void lfpRatiometer::execute() {
-    makePSD();
-    getRatio();
 
-    // my observation
-    cout << "window:\n";
-    for (int i=0; i<N;i++){
-        cout << window[i] << "\n";
+    // get new time series reading
+    in_raw.push_back(input(0));
+
+    // if time series is full
+    if (in_raw.size() > N) {
+        // cut it to size
+        in_raw.erase(in_raw.begin());
+
+        // run our LF/HF analysis
+        makePSD();
+        getRatio();
+
+        // output the calculated lf_hf_ratio
+        output(0) = lf_hf_ratio;
+        
     }
-
-    cout << "freq, psd\n";
-    for (int i=0; i<f_size; i++) {
-        cout << allfreqs[i] << "," << psd[i] << "\n";
-    }
-
-    cout << "LF/HF Ratio: " << lf_hf_ratio << "\n";
+    
 }
 
 // function that calculates the power spectral density

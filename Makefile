@@ -1,10 +1,12 @@
-CXX=g++
-CXX_FLAGS=-std=c++11 -Iinclude
+PLUGIN_NAME = lfpRatiometer
 
-LD_FLAGS=-lfftw3 -lm
+HEADERS = lfpRatiometer.h
 
-all: build/lfpRatiometer.o
-	$(CXX) $(CXX_FLAGS) -o build/test src/main.cpp build/lfpRatiometer.o $(LD_FLAGS)
+SOURCES = lfpRatiometer.cpp \
+			moc_lfpRatiometer.cpp
 
-build/lfpRatiometer.o:
-	$(CXX) $(CXX_FLAGS) -o build/lfpRatiometer.o -c src/lfpRatiometer.cpp
+LIBS = -lfftw3 -lm
+
+### Do note edit below this line ###
+
+include $(shell rtxi_plugin_config --pkgdata-dir)/Makefile.plugin_compile
