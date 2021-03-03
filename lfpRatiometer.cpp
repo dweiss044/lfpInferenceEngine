@@ -4,8 +4,8 @@
 using namespace std;
 
 extern "C" Plugin::Object *createRTXIPlugin(void){
-    int N = 10;
-    double sampling = 200;
+    int N = 2000;
+    double sampling = 2000;
     return new lfpRatiometer(N, sampling);
 }
 
