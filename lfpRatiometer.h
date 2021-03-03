@@ -34,9 +34,14 @@ class lfpRatiometer : public DefaultGUIModel {
     protected:
 
         // update function
-        virtual void update(DefaultGUIModel::update_flags_t)
+        virtual void update(DefaultGUIModel::update_flags_t);
 
     private:
+        // RTXI complains without these
+        double some_parameter;
+        double some_state;
+        double period;
+        void initParameters();
     
         int N; // time window in samples
         int f_size; // nonredundant size of DFT
@@ -81,7 +86,6 @@ class lfpRatiometer : public DefaultGUIModel {
             }
         }
 
-        void initParameters();
         void makePSD();
         void getRatio();
     
