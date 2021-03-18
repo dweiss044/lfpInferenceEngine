@@ -2,7 +2,7 @@ PLUGIN_NAME = rtxilfpRatiometer
 
 HEADERS = rtxilfpRatiometer.h
 
-SOURCES = rtxolfpRatiometer.cpp \
+SOURCES = rtxilfpRatiometer.cpp \
 			moc_rtxilfpRatiometer.cpp
 
 LIBS = -lfftw3 -lm
