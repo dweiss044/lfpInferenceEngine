@@ -29,7 +29,7 @@ static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 // defining what's in the object's constructor
 // user defines time window length (in samples) and sampling rate
 rtxilfpRatiometer::rtxilfpRatiometer() :
-DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars)
+DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
 lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
     setWhatsThis("<p><b>lfpRatiometer:</b><br>Given an input, this module calculates the LF/HF ratio over a specified causal time window.</p>");
