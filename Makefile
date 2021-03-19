@@ -18,3 +18,6 @@ LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs lfpRatiometer)
 include Makefile.plugin_compile
 
 print-% : ; @echo $* = $($*)
+
+cleanrtxi :
+		sudo rm -rf /usr/local/lib/rtxi/$(PLUGIN_NAME).*
