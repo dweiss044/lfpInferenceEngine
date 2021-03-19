@@ -59,14 +59,14 @@ void rtxilfpRatiometer::execute() {
 }
 
 // RTXI function for initializing parameters
-void lfpRatiometer::initParameters(void)
+void rtxilfpRatiometer::initParameters(void)
 {
   some_parameter = 0;
   some_state = 0;
 }
 
 // update function (not running in real time)
-void lfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
+void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 {
   switch (flag) {
     case INIT:
@@ -95,7 +95,7 @@ void lfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 }
 
 // RTXI's customizeGUI function
-void lfpRatiometer::customizeGUI(void)
+void rtxilfpRatiometer::customizeGUI(void)
 {
   QGridLayout* customlayout = DefaultGUIModel::getLayout();
 
@@ -114,6 +114,6 @@ void lfpRatiometer::customizeGUI(void)
   setLayout(customlayout);
 }
 
-void lfpRatiometer::aBttn_event(void) { }
+void rtxilfpRatiometer::aBttn_event(void) { }
 
-void lfpRatiometer::bBttn_event(void) { }
+void rtxilfpRatiometer::bBttn_event(void) { }
