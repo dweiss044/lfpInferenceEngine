@@ -1,4 +1,4 @@
-PLUGIN_NAME = rtxilfpRatiometer
+PLUGIN_NAME = lfpRatiometer
 
 HEADERS = rtxi-lfpRatiometer.h
 
