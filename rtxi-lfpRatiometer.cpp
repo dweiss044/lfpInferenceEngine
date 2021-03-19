@@ -48,7 +48,7 @@ rtxilfpRatiometer::~rtxilfpRatiometer(void) {}
 void rtxilfpRatiometer::execute() {
 
   // push new time series reading to lfpRatiometer
-  lfpratiometer.pushTimeSample(input(0))
+  lfpratiometer.pushTimeSample(input(0));
 
   // calculate LF/HF ratio
   lfpratiometer.calcRatio();
