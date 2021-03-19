@@ -3,6 +3,7 @@
 
 #include <default_gui_model.h>
 #include <main_window.h>
+#include <lfpRatiometer>
 
 class rtxilfpRatiometer : public DefaultGUIModel {
 
