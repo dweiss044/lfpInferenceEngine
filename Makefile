@@ -5,8 +5,16 @@ HEADERS = rtxi-lfpRatiometer.h
 SOURCES = rtxi-lfpRatiometer.cpp \
 			moc_rtxi-lfpRatiometer.cpp
 
-LIBS = -lfftw3 -lm -llfpRatiometer
+LIBS =
 
-### Do note edit below this line ###
+OS := $(shell uname)
+CXX = g++
 
-include $(shell rtxi_plugin_config --pkgdata-dir)/Makefile.plugin_compile
+# lfpRatiometer
+CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags lfpRatiometer)
+LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs lfpRatiometer)
+
+# RTXI plug-in stuff
+include Makefile.plugin_compile
+
+print-% : ; @echo $* = $($*)
