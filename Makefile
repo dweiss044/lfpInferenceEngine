@@ -5,7 +5,7 @@ HEADERS = rtxi-lfpRatiometer.h
 SOURCES = rtxi-lfpRatiometer.cpp \
 			moc_rtxi-lfpRatiometer.cpp
 
-LIBS = -lfftw3 -lm
+LIBS = -lfftw3 -lm -llfpRatiometer
 
 ### Do note edit below this line ###
 
