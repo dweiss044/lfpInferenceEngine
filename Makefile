@@ -10,6 +10,10 @@ LIBS =
 OS := $(shell uname)
 CXX = g++
 
+# FFTW3
+CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags fftw3)
+LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs fftw3)
+
 # lfpRatiometer
 CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags lfpRatiometer)
 LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs lfpRatiometer)
