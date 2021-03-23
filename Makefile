@@ -5,14 +5,16 @@ HEADERS = rtxi-lfpRatiometer.h
 SOURCES = rtxi-lfpRatiometer.cpp \
 			moc_rtxi-lfpRatiometer.cpp
 
-LIBS = -lfftw3 -lm
+LIBS =
 
 OS := $(shell uname)
 CXX = g++
 
+# 
+
 # FFTW3
-# CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags fftw3)
-# LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs fftw3)
+CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags fftw3)
+LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs fftw3)
 
 # lfpRatiometer
 CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags lfpRatiometer)
