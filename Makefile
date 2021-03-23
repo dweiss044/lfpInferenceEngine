@@ -12,7 +12,7 @@ CXX = g++
 
 # 
 
-# FFTW3
+# FFTW3 (not sure if necessary)
 CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags fftw3)
 LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs fftw3)
 
