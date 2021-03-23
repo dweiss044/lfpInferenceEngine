@@ -29,8 +29,8 @@ static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 // defining what's in the object's constructor
 // user defines time window length (in samples) and sampling rate
 rtxilfpRatiometer::rtxilfpRatiometer(void) :
-DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars)
-// lfpratiometer(N, sampling) // constructing lfpRatiometer object
+DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
+lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
     setWhatsThis("<p><b>lfpRatiometer:</b><br>Given an input, this module calculates the LF/HF ratio over a specified causal time window.</p>");
     DefaultGUIModel::createGUI(vars, num_vars);
@@ -47,14 +47,14 @@ rtxilfpRatiometer::~rtxilfpRatiometer(void) { }
 // real-time RTXI function
 void rtxilfpRatiometer::execute(void) {
 
-  // // push new time series reading to lfpRatiometer
-  // lfpratiometer.pushTimeSample(input(0));
+  // push new time series reading to lfpRatiometer
+  lfpratiometer.pushTimeSample(input(0));
 
-  // // calculate LF/HF ratio
-  // lfpratiometer.calcRatio();
+  // calculate LF/HF ratio
+  lfpratiometer.calcRatio();
 
-  // // put the LF/HF ratio into the output
-  // output(0) = lfpratiometer.getRatio();
+  // put the LF/HF ratio into the output
+  output(0) = lfpratiometer.getRatio();
     
 }
 
