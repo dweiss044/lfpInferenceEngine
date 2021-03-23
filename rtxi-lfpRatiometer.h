@@ -39,8 +39,8 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         int N = 2000;
         int sampling = 2000;
 
-        // lfpRatiometer object
-        lfpRatiometer lfpratiometer;
+        // // lfpRatiometer object
+        // lfpRatiometer lfpratiometer;
     
     private slots:
         void aBttn_event(void);
