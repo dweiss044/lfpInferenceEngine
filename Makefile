@@ -1,4 +1,4 @@
-PLUGIN_NAME = lfpRatiometer
+PLUGIN_NAME = rtxilfpRatiometer
 
 HEADERS = rtxi-lfpRatiometer.h
 
@@ -19,6 +19,8 @@ LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs fftw3)
 # lfpRatiometer
 CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags lfpRatiometer)
 LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs lfpRatiometer)
+
+# CXXFLAGS := $(CXXFLAGS) -rpath  /home/amborsa10/.local/lib
 
 # RTXI plug-in stuff
 include Makefile.plugin_compile
