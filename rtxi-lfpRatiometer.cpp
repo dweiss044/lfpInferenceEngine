@@ -28,7 +28,7 @@ static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
 // defining what's in the object's constructor
 // user defines time window length (in samples) and sampling rate
-rtxilfpRatiometer::rtxilfpRatiometer() :
+rtxilfpRatiometer::rtxilfpRatiometer(void) :
 DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
 lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
@@ -42,10 +42,10 @@ lfpratiometer(N, sampling) // constructing lfpRatiometer object
 }
 
 // defining what's in the object's destructor
-rtxilfpRatiometer::~rtxilfpRatiometer(void) {}
+rtxilfpRatiometer::~rtxilfpRatiometer(void) { }
 
 // real-time RTXI function
-void rtxilfpRatiometer::execute() {
+void rtxilfpRatiometer::execute(void) {
 
   // push new time series reading to lfpRatiometer
   lfpratiometer.pushTimeSample(input(0));

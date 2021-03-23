@@ -11,13 +11,13 @@ class rtxilfpRatiometer : public DefaultGUIModel {
 
     public:
         // constructor
-        rtxilfpRatiometer();
+        rtxilfpRatiometer(void);
 
         // destructor
         virtual ~rtxilfpRatiometer(void);
 
         // execute
-        void execute();
+        void execute(void);
 
         // functions to make GUI
         void createGUI(DefaultGUIModel::variable_t*, int);
