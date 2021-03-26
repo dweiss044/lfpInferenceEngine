@@ -37,7 +37,7 @@ class rtxilfpRatiometer : public DefaultGUIModel {
 
         // default parameters for lfpRatiometer object
         int N = 2000;
-        int sampling = 2000;
+        double sampling = 2000;
 
         // // lfpRatiometer object
         lfpRatiometer lfpratiometer;
