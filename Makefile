@@ -5,7 +5,7 @@ HEADERS = rtxi-lfpRatiometer.h
 SOURCES = rtxi-lfpRatiometer.cpp \
 			moc_rtxi-lfpRatiometer.cpp
 
-LIBS = -llfpRatiometer
+LIBS = -L /home/amborsa10/.local -llfpRatiometer
 
 include Makefile.plugin_compile
 
