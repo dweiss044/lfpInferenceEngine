@@ -14,7 +14,7 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         rtxilfpRatiometer(void);
 
         // destructor
-        virtual ~rtxilfpRatiometer(void);
+        virtual void ~rtxilfpRatiometer(void);
 
         // execute
         void execute(void);
