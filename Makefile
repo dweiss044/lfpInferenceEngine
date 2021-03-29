@@ -15,10 +15,12 @@ CXX = g++
 #LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs fftw3)
 
 # lfpRatiometer
-CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags lfpRatiometer)
-LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs lfpRatiometer)
-#CXXFLAGS := $(CXXFLAGS) -I/home/amborsa10/.local/include
+#CXXFLAGS := $(CXXFLAGS) $(shell pkg-config --cflags lfpRatiometer)
+#LDFLAGS := $(LDFLAGS) $(shell pkg-config --libs lfpRatiometer)
+CXXFLAGS := $(CXXFLAGS) -I/home/amborsa10/.local/include
 #LDFLAGS := $(LDFLAGS)  -L/usr/lib/x86_64-linux-gnu -lfftw3 -L/home/amborsa10/.local/lib -llfpRatiometer
+
+LDFLAGS := $(LDFLAGS) -Wl,-rpath -Wl,/home/amborsa10/.local/lib -L/home/amborsa10/.local/lib -llfpRatiometer
 
 # CXXFLAGS := $(CXXFLAGS) -rpath  /home/amborsa10/.local/lib
 
