@@ -87,9 +87,9 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 {
   switch (flag) {
     case INIT:
-      period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
+      period = RT::System::getInstance()->getPeriod() * 1e-9; // s
       setParameter("Time Window", sampling/N);
-      setParameter("Sampling Rate", RT::System::getInstance()->getFrequency());
+      setParameter("Sampling Rate", 1.0/period);
       setParameter("LF Lower Bound", (double)1); // need to amend where these come from
       setParameter("LF Upper Bound", (double)10);
       setParameter("HF Lower Bound", (double)30);
@@ -121,7 +121,7 @@ void rtxilfpRatiometer::customizeGUI(void)
 
   // adding dropdown menu for choosing FFT window shape
   QLabel* windowLabel = new QLabel("Window:");
-  windowShape = new QComboBox;
+  QComboBox* windowShape = new QComboBox;
   windowShape->insertItem(1, "Rectangular")
   windowShape->insertItem(2, "Hamming")
   QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
