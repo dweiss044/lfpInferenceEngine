@@ -7,10 +7,30 @@ extern "C" Plugin::Object *createRTXIPlugin(void){
 }
 
 static DefaultGUIModel::variable_t vars[] = {
-  {
-    "GUI label", "Tooltip description",
-    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+{ 
+  "Time Window", "Time Window (s)", 
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE
   },
+{ 
+  "Sampling Rate", "Sampling Rate (Hz)", 
+  DefaultGUIModel::STATE | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "LF Lower Bound", "LF Lower Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "LF Upper Bound", "LF Upper Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "HF Lower Bound", "HF Lower Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "HF Upper Bound", "HF Upper Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },  
 {
     "input_LFP", "Input LFP",
     DefaultGUIModel::INPUT | DefaultGUIModel::DOUBLE,
@@ -18,9 +38,6 @@ static DefaultGUIModel::variable_t vars[] = {
 {
     "ratio", "Output LFP Power Ratio",
     DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
-  },
-{
-    "A State", "Tooltip description", DefaultGUIModel::STATE,
   },
 };
 
@@ -71,12 +88,15 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
   switch (flag) {
     case INIT:
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
-      setParameter("GUI label", some_parameter);
-      setState("A State", some_state);
+      setParameter("Time Window", sampling/N);
+      setParameter("Sampling Rate", RT::System::getInstance()->getFrequency());
+      setParameter("LF Lower Bound", (double)1); // need to amend where these come from
+      setParameter("LF Upper Bound", (double)10);
+      setParameter("HF Lower Bound", (double)30);
+      setParameter("HF Upper Bound", (double)90);
       break;
 
     case MODIFY:
-      some_parameter = getParameter("GUI label").toDouble();
       break;
 
     case UNPAUSE:
@@ -99,21 +119,14 @@ void rtxilfpRatiometer::customizeGUI(void)
 {
   QGridLayout* customlayout = DefaultGUIModel::getLayout();
 
-  QGroupBox* button_group = new QGroupBox;
+  // adding dropdown menu for choosing FFT window shape
+  QLabel* windowLabel = new QLabel("Window:");
+  windowShape = new QComboBox;
+  windowShape->insertItem(1, "Rectangular")
+  windowShape->insertItem(2, "Hamming")
+  QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
 
-  QPushButton* abutton = new QPushButton("Button A");
-  QPushButton* bbutton = new QPushButton("Button B");
-  QHBoxLayout* button_layout = new QHBoxLayout;
-  button_group->setLayout(button_layout);
-  button_layout->addWidget(abutton);
-  button_layout->addWidget(bbutton);
-  QObject::connect(abutton, SIGNAL(clicked()), this, SLOT(aBttn_event()));
-  QObject::connect(bbutton, SIGNAL(clicked()), this, SLOT(bBttn_event()));
-
-  customlayout->addWidget(button_group, 0, 0);
+  customlayout->addWidget(windowLabel, 0, 0);
+  customlayout->addWidget(windowShape, 0, 1);
   setLayout(customlayout);
 }
-
-void rtxilfpRatiometer::aBttn_event(void) { }
-
-void rtxilfpRatiometer::bBttn_event(void) { }
