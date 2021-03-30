@@ -122,8 +122,8 @@ void rtxilfpRatiometer::customizeGUI(void)
   // adding dropdown menu for choosing FFT window shape
   QLabel* windowLabel = new QLabel("Window:");
   QComboBox* windowShape = new QComboBox;
-  windowShape->insertItem(1, "Rectangular")
-  windowShape->insertItem(2, "Hamming")
+  windowShape->insertItem(1, "Rectangular");
+  windowShape->insertItem(2, "Hamming");
   QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
 
   customlayout->addWidget(windowLabel, 0, 0);
