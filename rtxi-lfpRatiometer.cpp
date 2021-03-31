@@ -47,6 +47,8 @@ static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 // user defines time window length (in samples) and sampling rate
 rtxilfpRatiometer::rtxilfpRatiometer(void) :
 DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
+period(((double)RT::System::getInstance()->getPeriod())),
+sampling(1.0/period),
 lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
     setWhatsThis("<p><b>lfpRatiometer:</b><br>Given an input, this module calculates the LF/HF ratio over a specified causal time window.</p>");
@@ -78,7 +80,7 @@ void rtxilfpRatiometer::execute(void) {
 // RTXI function for initializing parameters
 void rtxilfpRatiometer::initParameters(void)
 {
-  
+
 }
 
 // update function (not running in real time)
@@ -86,10 +88,10 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 {
   switch (flag) {
     case INIT:
-      period = ((double)RT::System::getInstance()->getPeriod()) * 1e-9; // s
-      sampling_freq = 1.0/period;
+      //period = ((double)RT::System::getInstance()->getPeriod()) * 1e-9; // s
+      //sampling_freq = 1.0/period;
       setParameter("Time Window (s)", sampling/N);
-      setState("Sampling Rate (Hz)", sampling_freq);
+      setState("Sampling Rate (Hz)", sampling);
       setParameter("LF Lower Bound", (double)1); // need to amend where these come from
       setParameter("LF Upper Bound", (double)10);
       setParameter("HF Lower Bound", (double)30);
