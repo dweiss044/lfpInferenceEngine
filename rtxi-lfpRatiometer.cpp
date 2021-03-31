@@ -134,10 +134,10 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       break;
 
     case PAUSE:
+      lfpratiometer.clrTimeSeries();
       break;
 
     case PERIOD:
-      period = ((double)RT::System::getInstance()->getPeriod()) * 1e-9; // s
       break;
 
     default:
