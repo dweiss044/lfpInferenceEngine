@@ -89,7 +89,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
     case INIT:
       period = ((double)RT::System::getInstance()->getPeriod()) * 1e-9; // s
       setParameter("Time Window (s)", sampling/N);
-      setParameter("Sampling Rate (Hz)", 1.0/period);
+      setState("Sampling Rate (Hz)", 1.0/period);
       setParameter("LF Lower Bound", (double)1); // need to amend where these come from
       setParameter("LF Upper Bound", (double)10);
       setParameter("HF Lower Bound", (double)30);
