@@ -38,6 +38,9 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         // lfpRatiometer object
         lfpRatiometer lfpratiometer;
 
+        // window tracking var
+        int window_tracker_dummy = 0;
+
 };
 
 

@@ -92,9 +92,35 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       setParameter("LF Upper Bound", lfpratiometer.getFreqBounds()[1]);
       setParameter("HF Lower Bound", lfpratiometer.getFreqBounds()[2]);
       setParameter("HF Upper Bound", lfpratiometer.getFreqBounds()[3]);
+
+      setParameter("debug var", window_tracker_dummy)
       break;
 
     case MODIFY:
+      // defining parameters needed for constructor
+      sampling = getParameter("Sampling Rate (Hz)").toDouble();
+      N = (int) (getParameter("Time Window (s)").toDouble() * sampling);
+
+      // reconstructing lfpratiometer object...LEGAL??
+      lfpratiometer(N, sampling);
+
+      // setting frequency bounds based on user input
+      lfpratiometer.setRatioParams(getParameter("LF Lower Bound").toDouble(),
+          getParameter("LF Upper Bound").toDouble(),
+          getParameter("HF Lower Bound").toDouble(),
+          getParameter("HF Upper Bound").toDouble());
+      
+      // setting DFT windowing function choice
+      if (windowShape->currentIndex() == 1) {
+        lfpratiometer.window_rect();
+      }
+      else if (windowShape->currentIndex() == 2) {
+        lfpratiometer.window_hamming();
+      }
+
+      // clearing time series
+      lfpratiometer.clrTimeSeries();
+
       break;
 
     case UNPAUSE:
@@ -121,7 +147,6 @@ void rtxilfpRatiometer::customizeGUI(void)
   QComboBox* windowShape = new QComboBox;
   windowShape->insertItem(1, "Rectangular");
   windowShape->insertItem(2, "Hamming");
-  //QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
 
   customlayout->addWidget(windowShape, 2, 0);
   setLayout(customlayout);
