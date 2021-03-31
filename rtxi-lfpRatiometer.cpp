@@ -98,7 +98,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 
     case MODIFY:
       // defining parameters needed for constructor
-      sampling = getState("Sampling Rate (Hz)").toDouble();
+      sampling = ((double)RT::System::getInstance()->getPeriod())*1e-9;
       N = (int) (getParameter("Time Window (s)").toDouble() * sampling);
 
       // making new FFT plan
