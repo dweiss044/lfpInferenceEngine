@@ -101,8 +101,8 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       sampling = getParameter("Sampling Rate (Hz)").toDouble();
       N = (int) (getParameter("Time Window (s)").toDouble() * sampling);
 
-      // reconstructing lfpratiometer object...LEGAL??
-      lfpratiometer(N, sampling);
+      // making new FFT plan
+      lfpratiometer.changeFFTPlan(N, sampling);
 
       // setting frequency bounds based on user input
       lfpratiometer.setRatioParams(getParameter("LF Lower Bound").toDouble(),
@@ -144,7 +144,7 @@ void rtxilfpRatiometer::customizeGUI(void)
   QGridLayout* customlayout = DefaultGUIModel::getLayout();
 
   // adding dropdown menu for choosing FFT window shape
-  QComboBox* windowShape = new QComboBox;
+  windowShape = new QComboBox;
   windowShape->insertItem(1, "Rectangular");
   windowShape->insertItem(2, "Hamming");
 
