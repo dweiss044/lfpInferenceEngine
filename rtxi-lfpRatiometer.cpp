@@ -98,7 +98,9 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 
     case MODIFY:
       // defining parameters needed for constructor
-      sampling = ((double)RT::System::getInstance()->getPeriod())*1e-9;
+      period = ((double)RT::System::getInstance()->getPeriod())*1e-9;
+      sampling = 1.0/period;
+      setState("Sampling Rate (Hz)", sampling); // updating GUI
       N = (int) (getParameter("Time Window (s)").toDouble() * sampling);
 
       // making new FFT plan
@@ -122,6 +124,9 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 
       // clearing time series
       lfpratiometer.clrTimeSeries();
+
+      // tracking dummy variable
+      setParameter("debug var", window_tracker_dummy);
 
       break;
 
