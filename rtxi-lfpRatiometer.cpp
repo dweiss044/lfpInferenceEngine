@@ -113,13 +113,18 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       // setting DFT windowing function choice
       if (windowShape->currentIndex() == 1) {
         lfpratiometer.window_rect();
+        window_tracker_dummy = 1;
       }
       else if (windowShape->currentIndex() == 2) {
         lfpratiometer.window_hamming();
+        window_tracker_dummy = 2;
       }
 
       // clearing time series
       lfpratiometer.clrTimeSeries();
+
+      // modifying states on GUI
+      setState("Sampling Rate (Hz)", sampling);
 
       break;
 
