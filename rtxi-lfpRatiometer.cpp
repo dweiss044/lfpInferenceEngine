@@ -84,11 +84,11 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       setParameter("Time Window (s)", sampling/N);
       setState("Sampling Rate (Hz)", sampling);
       // get bounds from lfpratiometer object
-      std::vector<double> freqbounds = lfpratiometer.getFreqBounds();
-      setParameter("LF Lower Bound", freqbounds[0]); // need to amend where these come from
-      setParameter("LF Upper Bound", freqbounds[1]);
-      setParameter("HF Lower Bound", freqbounds[2]);
-      setParameter("HF Upper Bound", freqbounds[3]);
+      //std::vector<double> freqbounds = lfpratiometer.getFreqBounds();
+      setParameter("LF Lower Bound", lfpratiometer.getFreqBounds()[0]); // need to amend where these come from
+      setParameter("LF Upper Bound", lfpratiometer.getFreqBounds()[1]);
+      setParameter("HF Lower Bound", lfpratiometer.getFreqBounds()[2]);
+      setParameter("HF Upper Bound", lfpratiometer.getFreqBounds()[3]);
       break;
 
     case MODIFY:
