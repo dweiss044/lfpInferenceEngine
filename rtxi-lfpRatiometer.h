@@ -29,10 +29,8 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         virtual void update(DefaultGUIModel::update_flags_t);
 
     private:
-        // I want to get rid of these
-        double some_parameter;
-        double some_state;
         double period;
+        double sampling_freq;
         void initParameters();
 
         // default parameters for lfpRatiometer object
