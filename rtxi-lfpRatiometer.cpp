@@ -8,11 +8,11 @@ extern "C" Plugin::Object *createRTXIPlugin(void){
 
 static DefaultGUIModel::variable_t vars[] = {
 { 
-  "Time Window", "Time Window (s)", 
+  "Time Window (s)", "Time Window (s)", 
   DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE
   },
 { 
-  "Sampling Rate", "Sampling Rate (Hz)", 
+  "Sampling Rate (Hz)", "Sampling Rate (Hz)", 
   DefaultGUIModel::STATE | DefaultGUIModel::DOUBLE,
   },
 { 
@@ -88,8 +88,8 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
   switch (flag) {
     case INIT:
       period = RT::System::getInstance()->getPeriod() * 1e-9; // s
-      setParameter("Time Window", sampling/N);
-      setParameter("Sampling Rate", 1.0/period);
+      setParameter("Time Window (s)", sampling/N);
+      setParameter("Sampling Rate (Hz)", period);
       setParameter("LF Lower Bound", (double)1); // need to amend where these come from
       setParameter("LF Upper Bound", (double)10);
       setParameter("HF Lower Bound", (double)30);
@@ -106,7 +106,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       break;
 
     case PERIOD:
-      period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
+      period = RT::System::getInstance()->getPeriod() * 1e-9; // s
       break;
 
     default:
@@ -120,13 +120,13 @@ void rtxilfpRatiometer::customizeGUI(void)
   QGridLayout* customlayout = DefaultGUIModel::getLayout();
 
   // adding dropdown menu for choosing FFT window shape
-  QLabel* windowLabel = new QLabel("Window:");
+  QLabel* windowLabel = new QLabel("FFT Window:");
   QComboBox* windowShape = new QComboBox;
   windowShape->insertItem(1, "Rectangular");
   windowShape->insertItem(2, "Hamming");
   QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
 
-  customlayout->addWidget(windowLabel, 0, 0);
-  customlayout->addWidget(windowShape, 0, 1);
+  customlayout->addWidget(windowLabel);
+  customlayout->addWidget(windowShape);
   setLayout(customlayout);
 }
