@@ -78,8 +78,7 @@ void rtxilfpRatiometer::execute(void) {
 // RTXI function for initializing parameters
 void rtxilfpRatiometer::initParameters(void)
 {
-  some_parameter = 0;
-  some_state = 0;
+  
 }
 
 // update function (not running in real time)
