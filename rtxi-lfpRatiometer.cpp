@@ -87,7 +87,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 {
   switch (flag) {
     case INIT:
-      period = RT::System::getInstance()->getPeriod() * 1e-9; // s
+      period = ((double)RT::System::getInstance()->getPeriod()) * 1e-9; // s
       setParameter("Time Window (s)", sampling/N);
       setParameter("Sampling Rate (Hz)", period);
       setParameter("LF Lower Bound", (double)1); // need to amend where these come from
@@ -126,7 +126,7 @@ void rtxilfpRatiometer::customizeGUI(void)
   windowShape->insertItem(2, "Hamming");
   QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
 
-  customlayout->addWidget(windowLabel);
-  customlayout->addWidget(windowShape);
+  customlayout->addWidget(windowLabel, 1, 0);
+  customlayout->addWidget(windowShape, 1, 1);
   setLayout(customlayout);
 }
