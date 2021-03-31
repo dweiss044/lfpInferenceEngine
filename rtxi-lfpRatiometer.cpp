@@ -41,7 +41,7 @@ static DefaultGUIModel::variable_t vars[] = {
   },
 {
    "debug var", "debug var",
-   DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
+   DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
 }
 };
 
