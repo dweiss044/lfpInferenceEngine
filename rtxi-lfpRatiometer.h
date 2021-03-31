@@ -33,9 +33,8 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         void initParameters();
 
         // needed to initialize lfpratiometer object
-        // set based on RT period
-        int N;
-        double sampling;
+        int N = 1000; // initialized to 1000 samples
+        double sampling; // set based on RT period
 
         // lfpRatiometer object
         lfpRatiometer lfpratiometer;
