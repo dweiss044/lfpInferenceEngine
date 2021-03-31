@@ -98,7 +98,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 
     case MODIFY:
       // defining parameters needed for constructor
-      sampling = getParameter("Sampling Rate (Hz)").toDouble();
+      sampling = getState("Sampling Rate (Hz)").toDouble();
       N = (int) (getParameter("Time Window (s)").toDouble() * sampling);
 
       // making new FFT plan
@@ -122,9 +122,6 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 
       // clearing time series
       lfpratiometer.clrTimeSeries();
-
-      // modifying states on GUI
-      setState("Sampling Rate (Hz)", sampling);
 
       break;
 
