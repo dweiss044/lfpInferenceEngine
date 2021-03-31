@@ -44,11 +44,12 @@ static DefaultGUIModel::variable_t vars[] = {
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
 // defining what's in the object's constructor
-// user defines time window length (in samples) and sampling rate
+// sampling set by RT period, N set so that window is ~1 second
 rtxilfpRatiometer::rtxilfpRatiometer(void) :
 DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
-period(((double)RT::System::getInstance()->getPeriod())),
+period(((double)RT::System::getInstance()->getPeriod())*1e-9),
 sampling(1.0/period),
+N(int(sampling)),
 lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
     setWhatsThis("<p><b>lfpRatiometer:</b><br>Given an input, this module calculates the LF/HF ratio over a specified causal time window.</p>");
@@ -88,8 +89,6 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 {
   switch (flag) {
     case INIT:
-      //period = ((double)RT::System::getInstance()->getPeriod()) * 1e-9; // s
-      //sampling_freq = 1.0/period;
       setParameter("Time Window (s)", sampling/N);
       setState("Sampling Rate (Hz)", sampling);
       setParameter("LF Lower Bound", (double)1); // need to amend where these come from
