@@ -93,7 +93,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       setParameter("HF Lower Bound", lfpratiometer.getFreqBounds()[2]);
       setParameter("HF Upper Bound", lfpratiometer.getFreqBounds()[3]);
 
-      setParameter("debug var", window_tracker_dummy)
+      setParameter("debug var", window_tracker_dummy);
       break;
 
     case MODIFY:
