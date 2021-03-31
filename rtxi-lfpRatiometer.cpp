@@ -39,10 +39,10 @@ static DefaultGUIModel::variable_t vars[] = {
     "ratio", "Output LFP Power Ratio",
     DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
   },
-{
-   "debug var", "debug var",
-   DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-}
+// {
+//    "debug var", "debug var",
+//    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+// }
 };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
@@ -92,8 +92,6 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       setParameter("LF Upper Bound", lfpratiometer.getFreqBounds()[1]);
       setParameter("HF Lower Bound", lfpratiometer.getFreqBounds()[2]);
       setParameter("HF Upper Bound", lfpratiometer.getFreqBounds()[3]);
-
-      setParameter("debug var", window_tracker_dummy);
       break;
 
     case MODIFY:
@@ -115,18 +113,13 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       // setting DFT windowing function choice
       if (windowShape->currentIndex() == 0) {
         lfpratiometer.window_rect();
-        window_tracker_dummy = 1;
       }
       else if (windowShape->currentIndex() == 1) {
         lfpratiometer.window_hamming();
-        window_tracker_dummy = 2;
       }
 
       // clearing time series
       lfpratiometer.clrTimeSeries();
-
-      // tracking dummy variable
-      setParameter("debug var", window_tracker_dummy);
 
       break;
 

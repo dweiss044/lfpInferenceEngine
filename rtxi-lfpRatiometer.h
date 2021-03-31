@@ -41,9 +41,6 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         // variables for GUI
         QComboBox* windowShape;
 
-        // window tracking var
-        int window_tracker_dummy = 0;
-
 };
 
 
