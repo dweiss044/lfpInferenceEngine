@@ -113,12 +113,11 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
           getParameter("HF Upper Bound").toDouble());
       
       // setting DFT windowing function choice
-      const int dropindex = windowShape->currentIndex();
-      if (dropindex == 1) {
+      if (windowShape->currentIndex() == 1) {
         lfpratiometer.window_rect();
         window_tracker_dummy = 1;
       }
-      else if (dropindex == 2) {
+      else if (windowShape->currentIndex() == 2) {
         lfpratiometer.window_hamming();
         window_tracker_dummy = 2;
       }
@@ -127,7 +126,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       lfpratiometer.clrTimeSeries();
 
       // tracking dummy variable
-      setParameter("debug var", dropindex);
+      setParameter("debug var", windowShape->currentIndex());
 
       break;
 
