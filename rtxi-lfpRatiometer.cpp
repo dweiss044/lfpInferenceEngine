@@ -49,7 +49,7 @@ rtxilfpRatiometer::rtxilfpRatiometer(void) :
 DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
 period(((double)RT::System::getInstance()->getPeriod())*1e-9),
 sampling(1.0/period),
-N((int) (sampling)),
+N((int) floor(sampling)),
 lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
     setWhatsThis("<p><b>lfpRatiometer:</b><br>Given an input, this module calculates the LF/HF ratio over a specified causal time window.</p>");
