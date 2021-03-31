@@ -39,12 +39,16 @@ static DefaultGUIModel::variable_t vars[] = {
     "ratio", "Output LFP Power Ratio",
     DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
   },
+{
+   "debug var", "debug var",
+   DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
+}
 };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
 // defining what's in the object's constructor
-// sampling set by RT period, N set so that window is ~1 second
+// sampling set by RT period
 rtxilfpRatiometer::rtxilfpRatiometer(void) :
 DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
 period(((double)RT::System::getInstance()->getPeriod())*1e-9), // grabbing RT period
@@ -84,8 +88,7 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
       setParameter("Time Window (s)", sampling/N);
       setState("Sampling Rate (Hz)", sampling);
       // get bounds from lfpratiometer object
-      //std::vector<double> freqbounds = lfpratiometer.getFreqBounds();
-      setParameter("LF Lower Bound", lfpratiometer.getFreqBounds()[0]); // need to amend where these come from
+      setParameter("LF Lower Bound", lfpratiometer.getFreqBounds()[0]);
       setParameter("LF Upper Bound", lfpratiometer.getFreqBounds()[1]);
       setParameter("HF Lower Bound", lfpratiometer.getFreqBounds()[2]);
       setParameter("HF Upper Bound", lfpratiometer.getFreqBounds()[3]);
@@ -118,7 +121,7 @@ void rtxilfpRatiometer::customizeGUI(void)
   QComboBox* windowShape = new QComboBox;
   windowShape->insertItem(1, "Rectangular");
   windowShape->insertItem(2, "Hamming");
-  QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
+  //QObject::connect(windowShape, SIGNAL(activated(int)), this, SLOT(updateWindow(int)));
 
   customlayout->addWidget(windowShape, 2, 0);
   setLayout(customlayout);
