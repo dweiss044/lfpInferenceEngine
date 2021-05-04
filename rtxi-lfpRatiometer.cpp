@@ -39,10 +39,14 @@ static DefaultGUIModel::variable_t vars[] = {
     "ratio", "Output LFP Power Ratio",
     DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
   },
-// {
-//    "debug var", "debug var",
-//    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-// }
+{
+    "LF Power", "Power in LF Band",
+    DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
+  },
+{
+    "HF Power", "Power in HF Band",
+    DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
+  }
 };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
@@ -77,6 +81,8 @@ void rtxilfpRatiometer::execute(void) {
 
   // put the LF/HF ratio into the output
   output(0) = lfpratiometer.getRatio();
+  output(1) = lfpratiometer.getLFpower();
+  output(2) = lfpratiometer.getHFpower();
     
 }
 
