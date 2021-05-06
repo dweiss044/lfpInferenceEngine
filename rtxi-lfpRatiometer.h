@@ -29,22 +29,17 @@ class rtxilfpRatiometer : public DefaultGUIModel {
         virtual void update(DefaultGUIModel::update_flags_t);
 
     private:
-        // I want to get rid of these
-        double some_parameter;
-        double some_state;
-        double period;
-        void initParameters();
 
-        // default parameters for lfpRatiometer object
-        int N = 2000;
-        int sampling = 2000;
+        // needed to initialize lfpratiometer object
+        int N = 1000; // initialized to 1000 samples (1s for 1kHz sampling)
+        double period; // set from RT period
+        double sampling; // set based on RT period
 
-        // // lfpRatiometer object
+        // lfpRatiometer object
         lfpRatiometer lfpratiometer;
-    
-    private slots:
-        void aBttn_event(void);
-        void bBttn_event(void);
+
+        // variables for GUI
+        QComboBox* windowShape;
 
 };
 

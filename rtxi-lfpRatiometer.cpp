@@ -7,10 +7,30 @@ extern "C" Plugin::Object *createRTXIPlugin(void){
 }
 
 static DefaultGUIModel::variable_t vars[] = {
-  {
-    "GUI label", "Tooltip description",
-    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+{ 
+  "Time Window (s)", "Time Window (s)", 
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE
   },
+{ 
+  "Sampling Rate (Hz)", "Sampling Rate (Hz)", 
+  DefaultGUIModel::STATE | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "LF Lower Bound", "LF Lower Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "LF Upper Bound", "LF Upper Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "HF Lower Bound", "HF Lower Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+{ 
+  "HF Upper Bound", "HF Upper Bound",
+  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },  
 {
     "input_LFP", "Input LFP",
     DefaultGUIModel::INPUT | DefaultGUIModel::DOUBLE,
@@ -20,22 +40,28 @@ static DefaultGUIModel::variable_t vars[] = {
     DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
   },
 {
-    "A State", "Tooltip description", DefaultGUIModel::STATE,
+    "LF Power", "Power in LF Band",
+    DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
   },
+{
+    "HF Power", "Power in HF Band",
+    DefaultGUIModel::OUTPUT | DefaultGUIModel::DOUBLE,
+  }
 };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
 // defining what's in the object's constructor
-// user defines time window length (in samples) and sampling rate
+// sampling set by RT period
 rtxilfpRatiometer::rtxilfpRatiometer(void) :
 DefaultGUIModel("lfpRatiometer with Custom GUI", ::vars, ::num_vars),
+period(((double)RT::System::getInstance()->getPeriod())*1e-9), // grabbing RT period
+sampling(1.0/period), // calculating RT sampling rate
 lfpratiometer(N, sampling) // constructing lfpRatiometer object
 {
     setWhatsThis("<p><b>lfpRatiometer:</b><br>Given an input, this module calculates the LF/HF ratio over a specified causal time window.</p>");
     DefaultGUIModel::createGUI(vars, num_vars);
     customizeGUI();
-    initParameters();
     update(INIT);
     refresh();
     QTimer::singleShot(0, this, SLOT(resizeMe()));
@@ -55,14 +81,9 @@ void rtxilfpRatiometer::execute(void) {
 
   // put the LF/HF ratio into the output
   output(0) = lfpratiometer.getRatio();
+  output(1) = lfpratiometer.getLFpower();
+  output(2) = lfpratiometer.getHFpower();
     
-}
-
-// RTXI function for initializing parameters
-void rtxilfpRatiometer::initParameters(void)
-{
-  some_parameter = 0;
-  some_state = 0;
 }
 
 // update function (not running in real time)
@@ -70,23 +91,52 @@ void rtxilfpRatiometer::update(DefaultGUIModel::update_flags_t flag)
 {
   switch (flag) {
     case INIT:
-      period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
-      setParameter("GUI label", some_parameter);
-      setState("A State", some_state);
+      setParameter("Time Window (s)", sampling/N);
+      setState("Sampling Rate (Hz)", sampling);
+      // get bounds from lfpratiometer object
+      setParameter("LF Lower Bound", lfpratiometer.getFreqBounds()[0]);
+      setParameter("LF Upper Bound", lfpratiometer.getFreqBounds()[1]);
+      setParameter("HF Lower Bound", lfpratiometer.getFreqBounds()[2]);
+      setParameter("HF Upper Bound", lfpratiometer.getFreqBounds()[3]);
       break;
 
     case MODIFY:
-      some_parameter = getParameter("GUI label").toDouble();
+      // defining parameters needed for constructor
+      period = ((double)RT::System::getInstance()->getPeriod())*1e-9;
+      sampling = 1.0/period;
+      setState("Sampling Rate (Hz)", sampling); // updating GUI
+      N = (int) (getParameter("Time Window (s)").toDouble() * sampling);
+
+      // making new FFT plan
+      lfpratiometer.changeFFTPlan(N, sampling);
+
+      // setting frequency bounds based on user input
+      lfpratiometer.setRatioParams(getParameter("LF Lower Bound").toDouble(),
+          getParameter("LF Upper Bound").toDouble(),
+          getParameter("HF Lower Bound").toDouble(),
+          getParameter("HF Upper Bound").toDouble());
+      
+      // setting DFT windowing function choice
+      if (windowShape->currentIndex() == 0) {
+        lfpratiometer.window_rect();
+      }
+      else if (windowShape->currentIndex() == 1) {
+        lfpratiometer.window_hamming();
+      }
+
+      // clearing time series
+      lfpratiometer.clrTimeSeries();
+
       break;
 
     case UNPAUSE:
       break;
 
     case PAUSE:
+      lfpratiometer.clrTimeSeries();
       break;
 
     case PERIOD:
-      period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       break;
 
     default:
@@ -99,21 +149,11 @@ void rtxilfpRatiometer::customizeGUI(void)
 {
   QGridLayout* customlayout = DefaultGUIModel::getLayout();
 
-  QGroupBox* button_group = new QGroupBox;
+  // adding dropdown menu for choosing FFT window shape
+  windowShape = new QComboBox;
+  windowShape->insertItem(1, "Rectangular");
+  windowShape->insertItem(2, "Hamming");
 
-  QPushButton* abutton = new QPushButton("Button A");
-  QPushButton* bbutton = new QPushButton("Button B");
-  QHBoxLayout* button_layout = new QHBoxLayout;
-  button_group->setLayout(button_layout);
-  button_layout->addWidget(abutton);
-  button_layout->addWidget(bbutton);
-  QObject::connect(abutton, SIGNAL(clicked()), this, SLOT(aBttn_event()));
-  QObject::connect(bbutton, SIGNAL(clicked()), this, SLOT(bBttn_event()));
-
-  customlayout->addWidget(button_group, 0, 0);
+  customlayout->addWidget(windowShape, 2, 0);
   setLayout(customlayout);
 }
-
-void rtxilfpRatiometer::aBttn_event(void) { }
-
-void rtxilfpRatiometer::bBttn_event(void) { }
