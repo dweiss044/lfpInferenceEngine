@@ -1,5 +1,5 @@
-#ifndef LFPRATIOMETER_H
-#define LFPRATIOMETER_H
+#ifndef LFPRATIOMETER
+#define LFPRATIOMETER
 
 #include <stdio.h>
 #include <malloc.h>
@@ -19,8 +19,40 @@ class lfpRatiometer {
         // destructor
         ~lfpRatiometer(void);
 
-        // execute
-        void execute();
+        // changing FFT plan (for RTXI only)
+        void changeFFTPlan(int N_input, double sampling_input);
+
+        // calculate LF/HF ratio
+        void calcRatio();
+
+        // setting windowing function
+        void window_rect();
+        void window_hamming();
+
+        // setting parameters
+        // note that to change FFT parameters, a new object needs to be created
+        void setRatioParams(double lf_low_input, double lf_high_input, double hf_low_input, double hf_high_input);
+
+        // getting parameters
+        double getRatio() const { return lf_hf_ratio; };
+        double getLFpower() const { return lf_total; };
+        double getHFpower() const { return hf_total; };
+        std::vector<double> getFreqs() { return allfreqs; };
+        std::vector<double> getPSD() { return psd; }
+        std::vector<double> getFreqBounds() { 
+            std::vector<double> freqbounds;
+            freqbounds.push_back(lf_low);
+            freqbounds.push_back(lf_high);
+            freqbounds.push_back(hf_low);
+            freqbounds.push_back(hf_high);
+            return freqbounds;
+        };
+
+
+        // modifying raw time series
+        void pushTimeSample(double input);
+        void setTimeSeries(std::vector<double> inputSeries);
+        void clrTimeSeries();
         
     protected:
 
@@ -33,10 +65,12 @@ class lfpRatiometer {
         std::vector<double> in_raw; // vector to hold raw time series
         fftw_complex *out; // pointer to DFT
         fftw_plan p; // stores FFTW3 plan
-
         std::vector<double> allfreqs;
+
         std::vector<double> psd;
         double lf_hf_ratio;
+        double lf_total;
+        double hf_total;
         double lf_low;
         double lf_high;
         double hf_low;
@@ -45,32 +79,7 @@ class lfpRatiometer {
         std::vector<double> window; // time domain of window
         double s2; // window scaling factor
 
-        // method sets window as rectangle
-        void window_rect(){
-            window.clear();
-            s2 = 0;
-            for (int j=0; j<N; j++){
-                double val = 1;
-                window.push_back(val);
-                s2 = s2 + val*val;
-            }
-        }
-        // method sets window as Hamming
-        // supposed to be consistent with MATLAB hamming() function
-        void window_hamming(){
-            window.clear();
-            s2 = 0;
-            double pi = atan(1) * 4;
-            for (int j=0; j<N; j++){
-                double z = 2*pi*j/(N-1);
-                double val = 0.54 - 0.46*cos(z);
-                window.push_back(val);
-                s2 = s2 + val*val;
-            }
-        }
-
         void makePSD();
-        void getRatio();
 
 
 };
