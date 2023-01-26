@@ -1,5 +1,7 @@
 #include "lfpInferenceEngine.h"
 
+#include <chrono>
+
 using namespace std;
 
 // defining what's in the object's constructor
@@ -30,15 +32,26 @@ lfpInferenceEngine::~lfpInferenceEngine(void) {
     }
     std::cout << "Python session ended. \n";
 }
-/*
-void lfpInferenceEngine::loadModel(void) {
-    PyRun_SimpleString("print('Python Session started.')");
+
+void lfpInferenceEngine::init(string recording, string modelname) {
+
+    std::cout << "Loading model and initializing... \n";
+    std::vector<std::string> arguments_load = {"pyfuncs","get_model", recording, modelname};
+    this->callPythonFunction(arguments_load,{});
+    this->load();
+    
+    std::vector<std::string> arguments_loaddata = {"pyfuncs","get_data", recording, modelname};
+    this->callPythonFunction(arguments_loaddata,{});
+    this->load_data();
+    
+    std::vector<std::string> arguments_predict = {"pyfuncs","predict"};
+    std::vector<PyObject*> pyArgs = {this->getModel(), 
+                                    this->getFeats(), 
+                                    this->getScaler(),
+                                    this->getData()};
+    this->callPythonFunction(arguments_predict, pyArgs);
 }
 
-void lfpInferenceEngine::infer(void) {
-    PyRun_SimpleString("print(infer())");
-}
-*/
 void lfpInferenceEngine::printInPython(void) {
     PyRun_SimpleString("print('Python session still on')");
     return;
@@ -89,15 +102,11 @@ int lfpInferenceEngine::callPythonFunction(vector<string> args, vector<PyObject*
                     PyTuple_SetItem(pArgs, i, pyArgs[i]);
                 }
             }
+            
             pValue = PyObject_CallObject(pFunc, pArgs);
-            Py_DECREF(pArgs);
+            //Py_DECREF(pArgs);
             if (pValue != NULL) {
-                if (!PyTuple_Check(pValue)) {
-                    printf("Result of call: %ld\n", PyLong_AsLong(pValue));
-                } 
-                else {
-                    printf("Result is tuple, will skip outputting result of call.\n");
-                }
+
                 this->pResult = Py_NewRef(pValue);
 
                 Py_DECREF(pValue);
@@ -139,27 +148,40 @@ void lfpInferenceEngine::setFeats(PyObject *newFeats) {
     pFeats = newFeats;
 }
 
-void lfpInferenceEngine::setScaler(PyObject *newModel) {
-    pModel = newModel;
+void lfpInferenceEngine::setScaler(PyObject *newScaler) {
+    pScaler = newScaler;
+}
+
+void lfpInferenceEngine::setData(std::vector<std::vector<double>> newData) {
+    PyObject* outer_list = PyList_New(newData.size());
+    for (std::size_t i = 0; i < newData.size(); i++) {
+        std::vector<double> inner_vector = newData[i];
+        PyObject* inner_list = PyList_New(inner_vector.size());
+        for (std::size_t j = 0; j < inner_vector.size(); j++) {
+            PyList_SetItem(inner_list, j, Py_BuildValue("d", inner_vector[j]));
+        }
+        PyList_SetItem(outer_list, i, inner_list);
+    }
+    pData = outer_list;
 }
 
 void lfpInferenceEngine::load() {
-    if (!PyTuple_Check(this->pResult)) {
+    if (!PyTuple_Check(pResult)) {
         printf("pResult is not a tuple! Make sure to call callPythonFunction correctly before loading.\n");
         return;
     }
 
-    if (!PyArg_ParseTuple(this->pResult,"OOO", &pModel, &pFeats, &pScaler)) {
+    if (!PyArg_ParseTuple(pResult,"OOO", &pModel, &pFeats, &pScaler)) {
         printf("Failed to unpack tuple.\n");
         return;
     }
 }
 
 void lfpInferenceEngine::load_data() {
-    if (PyTuple_Check(this->pResult)) {
+    if (PyTuple_Check(pResult)) {
         printf("pResult is a tuple! Make sure to call callPythonFunction correctly before loading data.\n");
         return;
     }
 
-    pData = this->pResult;
+    pData = pResult;
 }

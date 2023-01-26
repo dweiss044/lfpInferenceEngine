@@ -10,3 +10,6 @@ all: build/lfpRatiometer.o
 
 build/lfpRatiometer.o:
 	$(CXX) $(CXX_FLAGS) -o build/lfpRatiometer.o -c src/lfpRatiometer.cpp 
+
+time: build/lfpRatiometer.o
+	$(CXX) $(CXX_FLAGS) $(PYTHON_CXX_FLAGS) -o build/time src/timing.cpp src/lfpRatiometer.cpp src/lfpInferenceEngine.cpp $(PYTHON_LD_FLAGS) $(LD_FLAGS)

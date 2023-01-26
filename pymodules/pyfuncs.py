@@ -11,6 +11,7 @@ and a model.
 import pickle
 import dim_red_funcs as dr
 import dim_red_utils as util
+import numpy as np
 
 def get_model(recording, experiment, model_dir='./model'):
     file = '%s/%s_S1_%s.pkl' % (model_dir, recording, experiment)
@@ -24,11 +25,13 @@ def get_data(recording, experiment):
     return data
 
 def predict(model, feats, scaler, data):
+    # Here we're going to force data to be an array since
+    # C++ doesn't have numpy data types
     obs = dr.feature_projection(dr.scale_data(data,scaler),feats)
     # model.filter is erroring on assert np.abs(np.sum(pz_tp1t[t]) - 1.0) < 1e-8 
     # (line 94 of messages). For now do viterbi but we should switch back to 
     # filter later
-    return model.most_likely_states(obs)[-1]
+    return model.most_likely_states(obs)
         
 def infer():
     # Specify model location, to be replaced with command line argument

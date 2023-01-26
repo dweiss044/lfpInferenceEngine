@@ -25,19 +25,19 @@ class lfpInferenceEngine {
 
         void load();
         void load_data();
+        void init(std::string recording, std::string modelname);
 
         void setFeats(PyObject *newFeats);
         void setModel(PyObject *newModel);
-        void setScaler(PyObject *newFeats);
-        //void setData(PyObject *newFeats);
+        void setScaler(PyObject *newScaler);
+        void setData(std::vector<std::vector<double>> newData);
 
         PyObject* getResult() {return pResult;};
         PyObject* getModel() {return pModel;};
         PyObject* getFeats() {return pFeats;};
         PyObject* getScaler() {return pScaler;};
         PyObject* getInference() {return pInference;};
-        
-        PyObject* pData;
+        PyObject* getData() {return pData;};
         
     protected:
 
@@ -48,6 +48,7 @@ class lfpInferenceEngine {
         PyObject *pScaler;
         PyObject *pInference;
         PyObject *pResult;
+        PyObject *pData;
 
 };
 
